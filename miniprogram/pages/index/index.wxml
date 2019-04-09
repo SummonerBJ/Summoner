@@ -19,7 +19,7 @@
   <view class="activities">
     <view class="activities_list" wx:for="{{activities}}" wx:for-item="item"> 
       <view class="activities_image">
-        <image bindtap='toDetail'  mode="{{item.mode}}" src="{{item.field}}" ></image>
+        <image bindtap="toDetail" data-index="{{index}}" mode="aspectFill" src="{{item.field}}" ></image>
       </view>
       <view class="activities_text">{{item.image_name}}</view>
     </view>

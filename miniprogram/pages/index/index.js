@@ -80,9 +80,14 @@ Page({
   },
 
 
-  toDetail: function () { 
+  toDetail: function (e) { 
+        var that = this
+        //拿到点击的index下标
+        var index = parseInt(e.currentTarget.dataset.index);  
+        //将对象转为string
+        var activity =  that.data.activities[index] 
         wx.navigateTo({
-          url: '../detail/detail',
+          url: '../detail/detail?_id='+activity._id,
         }) 
   },
 

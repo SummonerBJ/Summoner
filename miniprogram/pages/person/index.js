@@ -10,10 +10,11 @@ Page({
         id: 'form',
         name: '表单',
         open: false,
-        pages: ['button']
+        pages: [{name:'保存照片',url:'savePhoto'}]
       }
     ]
   },
+  
   kindToggle: function (e) {
     var id = e.currentTarget.id, list = this.data.list;
     for (var i = 0, len = list.length; i < len; ++i) {

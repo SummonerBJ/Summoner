@@ -1,0 +1,59 @@
+<!--pages/savePhoto/savePhoto.wxml-->
+<view class="page">
+  <view class="page__hd">
+    <view class="page__title">保存照片</view>
+  </view>
+  <form bindsubmit='confirm'>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">图片名称：</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" name="image_name" placeholder="请输入名称" />
+      </view>
+    </view>
+
+
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">作者：</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" name="author"  placeholder="请输入作者" />
+      </view>
+    </view>
+
+    <view class="weui-cell">
+      <view class="weui-cell__bd">
+        <view class="weui-uploader">
+          <view class="weui-uploader__hd">
+            <view class="weui-uploader__title">图片上传</view>
+            <view class="weui-uploader__info">{{files.length}}/9</view>
+          </view>
+          <view class="weui-uploader__bd">
+            <view class="weui-uploader__files" id="uploaderFiles">
+              <block wx:for="{{files}}" wx:key="*this">
+                <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                  <image class="weui-uploader__img"  src="{{item}}" mode="aspectFill" />
+                </view>
+              </block>
+            </view>
+            <view class="weui-uploader__input-box">
+              <view class="weui-uploader__input" bindtap="chooseImage"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="button-sp-area">
+        <button class="weui-btn"  form-type='submit' type="primary">提交</button>
+    </view>
+  </view>
+  
+  </form>
+  <view class="page__ft">
+    <image src="images/icon_footer.png" style="width: 84px; height: 19px;"></image>
+  </view>
+</view>
