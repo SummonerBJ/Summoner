@@ -7,31 +7,26 @@ Page({
     userInfo: {},
     logged: false,
     takeSession: false,
-    requestResult: '',
-    activities: [
-      {
-        "mode": "aspectFill",
-        "src": "cloud://s8272041222-8c3ad6.7338-s8272041222-8c3ad6/disney/20101220130509576539.jpg",
-        "text": "迪士尼"
-      }
-    ]
+    requestResult: '', 
   },
 
-  onLoad: function() {
-    if (!wx.cloud) {
-      wx.redirectTo({
-        url: '../chooseLib/chooseLib',
-      })
-      return
-    } 
-    
+  onReady: function(){
+    var that = this;
     wx.cloud.callFunction({
+      // 需调用的云函数名
       name: 'detail',
-      complete: res => {
-        console.log(res);
+      // 成功回调
+      success: function (res) {
+        console.log(res.result.data)
+        that.setData({
+          activities : res.result.data
+        });
       }
     })
+  },
 
+  onLoad: function() {  
+    
     // 获取用户信息
     wx.getSetting({
       success: res => {
