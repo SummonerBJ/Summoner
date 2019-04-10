@@ -15,7 +15,7 @@ Page({
   onLoad: function(options) {
     var that = this;
     const db = wx.cloud.database()
-    db.collection('user_info').where({
+    db.collection('user_photo').where({
       parent_id: options._id
     }).get({
         success(res) {

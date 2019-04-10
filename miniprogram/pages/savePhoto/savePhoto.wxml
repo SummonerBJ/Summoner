@@ -5,6 +5,17 @@
   </view>
   <form bindsubmit='confirm'>
   <view class="weui-cells weui-cells_after-title">
+  
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">选中相册：</view>
+      </view>
+      <view class="weui-cell__bd"> 
+        <input class="weui-input" bindtap='openAlbum' disabled   value='{{chooseAblums}}'   placeholder="请输入名称" /> 
+        <input hidden='{{true}}' value='{{parent_id}}' name="parent_id"></input>
+      </view>
+    </view>
+
     <view class="weui-cell weui-cell_input">
       <view class="weui-cell__hd">
         <view class="weui-label">图片名称：</view>
