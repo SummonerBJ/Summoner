@@ -1,5 +1,14 @@
 <!--pages/person/index.wxml-->
 <view class="page">
+    <!-- 用户 openid -->
+    <view class="userinfo">
+      <button 
+        open-type="getUserInfo" 
+        bindgetuserinfo="onGetUserInfo"
+        class="userinfo-avatar"
+        style="background-image: url({{avatarUrl}})"
+      ></button> 
+    </view>
     <view class="page__hd">
         <view class="page__title">个人</view> 
     </view>

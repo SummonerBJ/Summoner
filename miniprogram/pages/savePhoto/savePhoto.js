@@ -1,5 +1,5 @@
 // pages/savePhoto/savePhoto.js
-import WxValidate from '../../js/WxValidate.js'
+import WxValidate from '../../js/WxValidate.js'; 
 var adds = {};
 Page({
   /**
@@ -14,16 +14,18 @@ Page({
   chooseImage: function(e) {
     var that = this;
     if (that.data.files.length < 9) {
-      wx.chooseImage({
-        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-        success: function(res) {
-          // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-          that.setData({
-            files: that.data.files.concat(res.tempFilePaths)
-          });
-        }
-      })
+      // wx.chooseImage({
+      //   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      //   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+      //   success: function(res) {
+      //     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+      //     that.setData({
+      //       files: that.data.files.concat(res.tempFilePaths)
+      //     });
+      //   }
+      // })
+      var result = tools.chooseImage();
+      console.log(result);
     } else {
       wx.showToast({
         title: '最多上传九张图片',
