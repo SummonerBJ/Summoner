@@ -1,7 +1,8 @@
 // pages/savePhoto/savePhoto.js
 import WxValidate from '../../js/WxValidate.js';
 import FileUtils from '../utils/file/fileUtils.js';
-import UploadUtils from '../utils/file/uploadUtils.js';  
+import UploadUtils from '../utils/file/uploadUtils.js';
+import Db from '../utils/db/db.js';
 var adds = {};
 Page({
   /**
@@ -12,15 +13,15 @@ Page({
     albums: [],
     chooseAblums: "",
     parent_id: "",
-    mask:true
+    mask: false
   },
   chooseImage: function(e) {
     var that = this;
-    if (that.data.files.length < 9) { 
+    if (that.data.files.length < 9) {
       FileUtils.chooseImage().then(res =>
         that.setData({
           files: that.data.files.concat(res.tempFilePaths)
-        }) ); 
+        }));
     } else {
       wx.showToast({
         title: '最多上传九张图片',
@@ -29,7 +30,7 @@ Page({
       });
     }
   },
-  previewImage: function(e) { 
+  previewImage: function(e) {
     FileUtils.previewImage(e.currentTarget.id, this.data.files)
   },
   /**
@@ -46,10 +47,6 @@ Page({
     }
     adds = formData;
     this.upload();
-    wx.showToast({
-      title: '已提交发布！',
-      duration: 3000
-    });
   },
   upload: function() {
     var that = this;
@@ -57,25 +54,52 @@ Page({
       const filePath = that.data.files[i];
       // 上传图片
       const cloudPath = 'disney/disney' + i + filePath.match(/\.[^.]+?$/)[0];
-      UploadUtils.upload(cloudPath,filePath).then(res =>{
-        console.log('[上传文件] 成功：', res);
-        adds.field = res.fileID;
-        const db = wx.cloud.database()
-        db.collection('user_photo').add({
-          // data 字段表示需新增的 JSON 数据
-          data: adds,
-          success: res => {
-          },
-          fail: e => {
-            console.error('[保存] 失败：', e)
-            wx.showToast({
-              icon: 'none',
-              title: '保存',
+      UploadUtils.upload(cloudPath, filePath).then(res => {
+          console.log('[上传文件] 成功：', res);
+          adds.field = res.fileID;
+          adds.create_time = new Date();
+          Db.add(adds, 'user_photo').then(
+            res => {
+              wx.showToast({
+                  icon: 'none',
+                  title: '保存成功'
+                }),
+                err => {
+                  console.error('[保存] 失败：', err)
+                  wx.showToast({
+                    icon: 'none',
+                    title: '保存失败'
+                  });
+                }
             })
-          }
-        })
-      })
+          //const db = wx.cloud.database()
+          // db.collection('user_photo').add({
+          //   // data 字段表示需新增的 JSON 数据
+          //   data: adds,
+          //   success: res => {
+          //   },
+          //   fail: e => {
+          //     console.error('[保存] 失败：', e)
+          //     wx.showToast({
+          //       icon: 'none',
+          //       title: '保存',
+          //     })
+          //   }
+          // })
+        },
+        err => {
+          console.error('[上传] 失败：', err)
+          wx.showToast({
+            icon: 'none',
+            title: '上传失败'
+          });
+        }
+      )
     }
+    wx.showToast({
+      title: '已提交发布！',
+      duration: 3000
+    });
   },
   /**
    * 显示错误信息
@@ -92,6 +116,13 @@ Page({
   openAlbum: function() {
     var that = this;
     var list = [];
+    if (that.data.albums.length == 0) {
+      wx.showToast({
+        icon: 'none',
+        title: '请先添加相册'
+      });
+      return;
+    }
     for (var index in that.data.albums) {
       list.push(that.data.albums[index].image_name);
     }
@@ -119,15 +150,21 @@ Page({
   onLoad: function(options) {
     //查询相册数据
     var that = this;
-    const db = wx.cloud.database()
-    db.collection('user_info').where({
+    var where = {
       parent_id: "0"
-    }).get({
-      success(res) {
-        // res.data 是包含以上定义的两条记录的数组 
+    };
+    Db.query('user_info', where).then(
+      res => {
         that.data.albums = res.data;
+      },
+      err => {
+        console.error('[相册数据] 失败：', err)
+        wx.showToast({
+          icon: 'none',
+          title: '相册数据获取失败'
+        });
       }
-    })
+    )
     //初始化验证
     this.initValidate();
   },
@@ -144,7 +181,7 @@ Page({
         required: true,
         rangelength: [2, 4]
       },
-      parent_id:{
+      parent_id: {
         required: true
       }
     }

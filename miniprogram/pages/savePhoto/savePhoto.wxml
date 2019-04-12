@@ -62,9 +62,7 @@
         <button class="weui-btn"  form-type='submit' type="primary">提交</button>
     </view>
   </view>
-  
-  <!-- 遮罩对象 -->
-  <mask hidden="{{!mask}}"></mask>
+   
   </form>
   <view class="page__ft">
     <image src="images/icon_footer.png" style="width: 84px; height: 19px;"></image>

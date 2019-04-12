@@ -10,7 +10,7 @@
 	},
 	"appid": "wx651a617b1d9d14aa",
 	"projectname": "Summoner",
-	"libVersion": "2.2.5",
+	"libVersion": "2.6.5",
 	"condition": {
 		"search": {
 			"current": -1,
