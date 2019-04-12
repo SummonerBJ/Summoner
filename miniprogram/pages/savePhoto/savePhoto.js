@@ -52,40 +52,24 @@ Page({
     var that = this;
     for (var i = 0; i < that.data.files.length; i++) {
       const filePath = that.data.files[i];
+      var num = Math.floor(Math.random() * 100000 + 1);
       // 上传图片
-      const cloudPath = 'disney/disney' + i + filePath.match(/\.[^.]+?$/)[0];
+      const cloudPath = 'disney/disney' + num + filePath.match(/\.[^.]+?$/)[0];
       UploadUtils.upload(cloudPath, filePath).then(res => {
           console.log('[上传文件] 成功：', res);
           adds.field = res.fileID;
           adds.create_time = new Date();
           Db.add(adds, 'user_photo').then(
             res => {
+              console.log('[相册图片] 保存成功：', res);
+            },
+            err => {
+              console.error('[保存] 失败：', err)
               wx.showToast({
-                  icon: 'none',
-                  title: '保存成功'
-                }),
-                err => {
-                  console.error('[保存] 失败：', err)
-                  wx.showToast({
-                    icon: 'none',
-                    title: '保存失败'
-                  });
-                }
-            })
-          //const db = wx.cloud.database()
-          // db.collection('user_photo').add({
-          //   // data 字段表示需新增的 JSON 数据
-          //   data: adds,
-          //   success: res => {
-          //   },
-          //   fail: e => {
-          //     console.error('[保存] 失败：', e)
-          //     wx.showToast({
-          //       icon: 'none',
-          //       title: '保存',
-          //     })
-          //   }
-          // })
+                icon: 'none',
+                title: '保存失败'
+              });
+            }) 
         },
         err => {
           console.error('[上传] 失败：', err)
@@ -98,8 +82,13 @@ Page({
     }
     wx.showToast({
       title: '已提交发布！',
-      duration: 3000
-    });
+      duration: 3000,
+      success:function(){  
+        setTimeout(wx.redirectTo({
+          url: '../detail/detail?_id=' + that.data.parent_id,
+        }), 2000)
+      }
+    })
   },
   /**
    * 显示错误信息
