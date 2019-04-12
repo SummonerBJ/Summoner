@@ -1,5 +1,4 @@
-<!--pages/savePhoto/savePhoto.wxml-->
-<wxs src="../utils/fileUtils.wxs" module="tools" ></wxs>
+<!--pages/savePhoto/savePhoto.wxml--> 
 <view class="page">
   <view class="page__hd">
     <view class="page__title">保存照片</view>
@@ -8,7 +7,7 @@
   <view class="weui-cells weui-cells_after-title">
   
     <view class="weui-cell weui-cell_input">
-      <view class="weui-cell__hd">
+      <view class="weui-cell__hd"> 
         <view class="weui-label">选中相册：</view>
       </view>
       <view class="weui-cell__bd"> 
@@ -64,6 +63,8 @@
     </view>
   </view>
   
+  <!-- 遮罩对象 -->
+  <mask hidden="{{!mask}}"></mask>
   </form>
   <view class="page__ft">
     <image src="images/icon_footer.png" style="width: 84px; height: 19px;"></image>

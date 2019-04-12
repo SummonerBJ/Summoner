@@ -1,5 +1,7 @@
 // pages/savePhoto/savePhoto.js
-import WxValidate from '../../js/WxValidate.js'; 
+import WxValidate from '../../js/WxValidate.js';
+import FileUtils from '../utils/file/fileUtils.js';
+import UploadUtils from '../utils/file/uploadUtils.js';  
 var adds = {};
 Page({
   /**
@@ -9,23 +11,16 @@ Page({
     files: [],
     albums: [],
     chooseAblums: "",
-    parent_id: ""
+    parent_id: "",
+    mask:true
   },
   chooseImage: function(e) {
     var that = this;
-    if (that.data.files.length < 9) {
-      // wx.chooseImage({
-      //   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      //   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-      //   success: function(res) {
-      //     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-      //     that.setData({
-      //       files: that.data.files.concat(res.tempFilePaths)
-      //     });
-      //   }
-      // })
-      var result = tools.chooseImage();
-      console.log(result);
+    if (that.data.files.length < 9) { 
+      FileUtils.chooseImage().then(res =>
+        that.setData({
+          files: that.data.files.concat(res.tempFilePaths)
+        }) ); 
     } else {
       wx.showToast({
         title: '最多上传九张图片',
@@ -34,11 +29,8 @@ Page({
       });
     }
   },
-  previewImage: function(e) {
-    wx.previewImage({
-      current: e.currentTarget.id, // 当前显示图片的http链接
-      urls: this.data.files // 需要预览的图片http链接列表
-    })
+  previewImage: function(e) { 
+    FileUtils.previewImage(e.currentTarget.id, this.data.files)
   },
   /**
    * 保存照片提交
@@ -64,38 +56,24 @@ Page({
     for (var i = 0; i < that.data.files.length; i++) {
       const filePath = that.data.files[i];
       // 上传图片
-      const cloudPath = 'disney/disney' + i + filePath.match(/\.[^.]+?$/)[0]
-      wx.cloud.uploadFile({
-        cloudPath,
-        filePath,
-        success: res => {
-          console.log('[上传文件] 成功：', res);
-          adds.field = res.fileID;
-          const db = wx.cloud.database()
-          db.collection('user_photo').add({
-            // data 字段表示需新增的 JSON 数据
-            data: adds,
-            success: res => { 
-            },
-            fail: e => {
-              console.error('[保存] 失败：', e)
-              wx.showToast({
-                icon: 'none',
-                title: '保存',
-              })
-            }
-          })
-        },
-        fail: e => {
-          console.error('[上传文件] 失败：', e)
-          wx.showToast({
-            icon: 'none',
-            title: '上传失败',
-          })
-        },
-        complete: () => {
-          wx.hideLoading()
-        }
+      const cloudPath = 'disney/disney' + i + filePath.match(/\.[^.]+?$/)[0];
+      UploadUtils.upload(cloudPath,filePath).then(res =>{
+        console.log('[上传文件] 成功：', res);
+        adds.field = res.fileID;
+        const db = wx.cloud.database()
+        db.collection('user_photo').add({
+          // data 字段表示需新增的 JSON 数据
+          data: adds,
+          success: res => {
+          },
+          fail: e => {
+            console.error('[保存] 失败：', e)
+            wx.showToast({
+              icon: 'none',
+              title: '保存',
+            })
+          }
+        })
       })
     }
   },

@@ -1,5 +1,4 @@
 module.exports = {
-
   /**
    * 选择照片
    * 
@@ -11,7 +10,7 @@ module.exports = {
         count: 9,
         sizeType: ['original', 'compressed'],
         sourceType: ['album'],
-        success: function (res) {
+        success: function (res) { 
           resolve(res);
         }
       })
